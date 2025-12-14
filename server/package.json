@@ -8,7 +8,8 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "init-db": "node src/database/init-standalone.js",
-    "create-db": "node src/database/create-db.js"
+    "create-db": "node src/database/create-db.js",
+    "setup-render-db": "node src/scripts/setup-render-db.js"
   },
   "keywords": [
     "express",
