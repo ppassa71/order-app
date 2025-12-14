@@ -1,0 +1,17 @@
+# Render.com 백엔드 서비스 설정
+# 이 파일은 server 폴더에 위치합니다.
+
+services:
+  - type: web
+    name: order-app-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+
