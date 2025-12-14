@@ -31,7 +31,7 @@ function OrderStatus({ orders, onOrderStatusChange }) {
                 {order.status === '주문 접수' && (
                   <button
                     className="order-action-button start"
-                    onClick={() => onOrderStatusChange(order.orderId, '제조 중')}
+                    onClick={() => onOrderStatusChange(order.orderId, order.status)}
                   >
                     제조 시작
                   </button>
@@ -39,12 +39,12 @@ function OrderStatus({ orders, onOrderStatusChange }) {
                 {order.status === '제조 중' && (
                   <button
                     className="order-action-button complete"
-                    onClick={() => onOrderStatusChange(order.orderId, '제조 완료')}
+                    onClick={() => onOrderStatusChange(order.orderId, order.status)}
                   >
                     제조 완료
                   </button>
                 )}
-                {order.status === '제조 완료' && (
+                {order.status === '완료' && (
                   <span className="order-status-badge">완료</span>
                 )}
               </div>

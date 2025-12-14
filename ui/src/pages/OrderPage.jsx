@@ -1,71 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import MenuCard from '../components/MenuCard';
 import Cart from '../components/Cart';
+import { menuAPI, orderAPI } from '../services/api';
 import './OrderPage.css';
 
-// 임시 메뉴 데이터 (나중에 API에서 가져올 예정)
-const mockMenus = [
-  {
-    id: 1,
-    name: '아메리카노(ICE)',
-    price: 4000,
-    description: '에스프레소에 물을 넣어 만든 시원한 아메리카노',
-    imageUrl: ''
-  },
-  {
-    id: 2,
-    name: '아메리카노(HOT)',
-    price: 4000,
-    description: '에스프레소에 물을 넣어 만든 따뜻한 아메리카노',
-    imageUrl: ''
-  },
-  {
-    id: 3,
-    name: '카페라떼',
-    price: 5000,
-    description: '에스프레소와 스팀 밀크가 만나 부드러운 맛',
-    imageUrl: ''
-  },
-  {
-    id: 4,
-    name: '카푸치노',
-    price: 5000,
-    description: '에스프레소와 우유 거품이 어우러진 클래식 커피',
-    imageUrl: ''
-  },
-  {
-    id: 5,
-    name: '카라멜 마키아토',
-    price: 5500,
-    description: '카라멜 시럽이 들어간 달콤한 커피',
-    imageUrl: ''
-  },
-  {
-    id: 6,
-    name: '바닐라 라떼',
-    price: 5500,
-    description: '바닐라 시럽이 들어간 부드러운 라떼',
-    imageUrl: ''
-  },
-  {
-    id: 7,
-    name: '카페모카',
-    price: 5500,
-    description: '초콜릿과 커피가 만나 달콤 쌉쌀한 맛',
-    imageUrl: ''
-  },
-  {
-    id: 8,
-    name: '콜드브루',
-    price: 4500,
-    description: '차가운 물로 우려낸 깔끔한 커피',
-    imageUrl: ''
-  }
-];
-
 function OrderPage({ onNavigate }) {
+  const [menus, setMenus] = useState([]);
   const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // 메뉴 목록 로드
+  useEffect(() => {
+    const loadMenus = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        console.log('메뉴 목록 로드 시작...');
+        const menuList = await menuAPI.getMenus();
+        console.log('메뉴 목록 로드 성공:', menuList.length, '개');
+        setMenus(menuList);
+      } catch (err) {
+        console.error('메뉴 로드 실패:', err);
+        const errorMessage = err.message || '메뉴를 불러오는데 실패했습니다.';
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMenus();
+  }, []);
 
   // 옵션별 가격 계산 헬퍼 함수
   const calculateUnitPrice = (basePrice, options) => {
@@ -126,22 +92,83 @@ function OrderPage({ onNavigate }) {
     setCartItems(updatedItems);
   };
 
-  const handleOrder = () => {
+  const handleOrder = async () => {
     if (cartItems.length === 0) return;
 
     const totalAmount = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
+    
+    // API 요청 형식에 맞게 데이터 변환
     const orderData = {
-      items: cartItems,
+      items: cartItems.map(item => ({
+        menuId: item.menuId,
+        menuName: item.menuName,
+        quantity: item.quantity,
+        options: item.options,
+        itemPrice: item.totalPrice / item.quantity, // 단가
+        totalPrice: item.totalPrice
+      })),
       totalAmount
     };
 
-    // TODO: 서버로 주문 데이터 전송
-    console.log('주문 데이터:', orderData);
-    alert(`주문이 완료되었습니다!\n총 금액: ${totalAmount.toLocaleString()}원`);
-    
-    // 장바구니 초기화
-    setCartItems([]);
+    try {
+      const result = await orderAPI.createOrder(orderData);
+      alert(`주문이 완료되었습니다!\n주문번호: ${result.id}\n총 금액: ${totalAmount.toLocaleString()}원`);
+      
+      // 장바구니 초기화
+      setCartItems([]);
+    } catch (err) {
+      console.error('주문 실패:', err);
+      alert(`주문 실패: ${err.message}`);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="order-page">
+        <Header currentPage="order" onNavigate={onNavigate} />
+        <main className="order-content">
+          <div style={{ padding: '2rem', textAlign: 'center' }}>메뉴를 불러오는 중...</div>
+        </main>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="order-page">
+        <Header currentPage="order" onNavigate={onNavigate} />
+        <main className="order-content">
+          <div style={{ padding: '2rem', textAlign: 'center' }}>
+            <div style={{ color: 'red', marginBottom: '1rem', fontSize: '1.1rem', fontWeight: 'bold' }}>
+              {error}
+            </div>
+            <div style={{ color: '#666', fontSize: '0.9rem', marginTop: '1rem' }}>
+              <p>확인 사항:</p>
+              <ul style={{ textAlign: 'left', display: 'inline-block', marginTop: '0.5rem' }}>
+                <li>백엔드 서버가 실행 중인지 확인하세요 (포트 3000)</li>
+                <li>데이터베이스가 실행 중이고 연결되어 있는지 확인하세요</li>
+                <li>브라우저 콘솔에서 자세한 오류 메시지를 확인하세요</li>
+              </ul>
+              <button 
+                onClick={() => window.location.reload()} 
+                style={{ 
+                  marginTop: '1rem', 
+                  padding: '0.5rem 1rem', 
+                  backgroundColor: '#2d5016', 
+                  color: 'white', 
+                  border: 'none', 
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                새로고침
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="order-page">
@@ -149,7 +176,7 @@ function OrderPage({ onNavigate }) {
       <main className="order-content">
         <section className="menu-section">
           <div className="menu-grid">
-            {mockMenus.map((menu) => (
+            {menus.map((menu) => (
               <MenuCard
                 key={menu.id}
                 menu={menu}

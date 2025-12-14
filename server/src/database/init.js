@@ -57,24 +57,59 @@ export const seedDatabase = async () => {
       const menus = [
         {
           name: '아메리카노(ICE)',
-          description: '시원한 아이스 아메리카노',
+          description: '에스프레소에 물을 넣어 만든 시원한 아메리카노',
           price: 4000,
           image_url: '',
           stock: 10
         },
         {
           name: '아메리카노(HOT)',
-          description: '따뜻한 핫 아메리카노',
+          description: '에스프레소에 물을 넣어 만든 따뜻한 아메리카노',
           price: 4000,
           image_url: '',
           stock: 10
         },
         {
           name: '카페라떼',
-          description: '부드러운 카페라떼',
+          description: '에스프레소와 스팀 밀크가 만나 부드러운 맛',
           price: 5000,
           image_url: '',
           stock: 10
+        },
+        {
+          name: '카푸치노',
+          description: '에스프레소와 우유 거품이 어우러진 클래식 커피',
+          price: 5000,
+          image_url: '',
+          stock: 8
+        },
+        {
+          name: '카라멜 마키아토',
+          description: '카라멜 시럽이 들어간 달콤한 커피',
+          price: 5500,
+          image_url: '',
+          stock: 5
+        },
+        {
+          name: '바닐라 라떼',
+          description: '바닐라 시럽이 들어간 부드러운 라떼',
+          price: 5500,
+          image_url: '',
+          stock: 3
+        },
+        {
+          name: '카페모카',
+          description: '초콜릿과 커피가 만나 달콤 쌉쌀한 맛',
+          price: 5500,
+          image_url: '',
+          stock: 0
+        },
+        {
+          name: '콜드브루',
+          description: '차가운 물로 우려낸 깔끔한 커피',
+          price: 4500,
+          image_url: '',
+          stock: 12
         }
       ];
 

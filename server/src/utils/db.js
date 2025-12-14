@@ -31,11 +31,17 @@ pool.on('error', (err) => {
 export const testConnection = async () => {
   try {
     const result = await pool.query('SELECT NOW()');
-    console.log('데이터베이스 연결 테스트 성공:', result.rows[0]);
+    console.log('데이터베이스 연결 테스트 성공:', result.rows[0].now);
     return true;
   } catch (error) {
-    console.error('데이터베이스 연결 테스트 실패:', error);
-    return false;
+    console.error('데이터베이스 연결 테스트 실패:', error.message);
+    console.error('연결 설정:', {
+      host: process.env.DB_HOST || 'localhost',
+      port: process.env.DB_PORT || 5432,
+      database: process.env.DB_NAME || 'order_app',
+      user: process.env.DB_USER || 'postgres'
+    });
+    throw error; // 에러를 던져서 상위에서 처리할 수 있도록
   }
 };
 

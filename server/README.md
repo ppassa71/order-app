@@ -18,9 +18,17 @@ npm install
 
 2. 환경 변수 설정:
 ```bash
-cp .env.example .env
-# .env 파일을 열어서 데이터베이스 설정을 수정하세요
+# server 폴더에 .env 파일을 생성하고 다음 내용을 추가하세요
+# DB_HOST=localhost
+# DB_PORT=5432
+# DB_NAME=order_app
+# DB_USER=postgres
+# DB_PASSWORD=1234
+# PORT=3000
+# NODE_ENV=development
 ```
+
+또는 환경 변수 없이 기본값을 사용할 수 있습니다 (기본값: localhost:5432, order_app, postgres/1234)
 
 3. 서버 실행:
 ```bash
@@ -48,10 +56,19 @@ server/
 └── README.md
 ```
 
+## 데이터베이스 설정
+
+1. PostgreSQL 설치 및 실행
+2. 데이터베이스 생성:
+```sql
+CREATE DATABASE order_app;
+```
+3. 서버 실행 시 자동으로 테이블이 생성되고 초기 데이터가 삽입됩니다.
+
 ## API 엔드포인트
 
-(추후 구현 예정)
-
+- `GET /` - 서버 상태 확인
+- `GET /api/health` - 서버 및 DB 연결 상태 확인
 - `GET /api/menus` - 메뉴 목록 조회
 - `POST /api/orders` - 주문 생성
 - `GET /api/orders` - 주문 목록 조회
@@ -60,6 +77,14 @@ server/
 - `GET /api/orders/statistics` - 주문 통계 조회
 - `GET /api/menus/stock` - 재고 조회
 - `PATCH /api/menus/:menuId/stock` - 재고 업데이트
+
+## 문제 해결
+
+서버 시작 시 오류가 발생하면:
+1. PostgreSQL이 실행 중인지 확인
+2. 데이터베이스 "order_app"이 생성되어 있는지 확인
+3. DB 사용자 권한 확인
+4. 포트 3000이 사용 가능한지 확인
 
 ## 개발 환경
 
