@@ -59,13 +59,10 @@ function AdminPage({ onNavigate }) {
           : order
       )
     );
-
-    // 대시보드 통계 업데이트
-    updateDashboardStats();
   };
 
-  // 대시보드 통계 업데이트 함수
-  const updateDashboardStats = () => {
+  // 대시보드 통계 업데이트 (orders 변경 시 자동 업데이트)
+  useEffect(() => {
     const totalOrders = orders.length;
     const receivedOrders = orders.filter(o => o.status === '주문 접수').length;
     const inProgressOrders = orders.filter(o => o.status === '제조 중').length;
@@ -77,10 +74,6 @@ function AdminPage({ onNavigate }) {
       inProgressOrders,
       completedOrders
     });
-  };
-
-  useEffect(() => {
-    updateDashboardStats();
   }, [orders]);
 
   return (

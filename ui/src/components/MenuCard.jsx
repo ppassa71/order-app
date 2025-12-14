@@ -5,17 +5,25 @@ function MenuCard({ menu, onAddToCart }) {
   const [addShot, setAddShot] = useState(false);
   const [addSyrup, setAddSyrup] = useState(false);
 
+  // 옵션별 가격 계산 헬퍼 함수
+  const calculatePrice = (basePrice, options) => {
+    let price = basePrice;
+    if (options.addShot) price += 500;
+    if (options.addSyrup) price += 0; // 현재 시럽 추가는 무료
+    return price;
+  };
+
   const handleAddToCart = () => {
+    const options = { addShot, addSyrup };
+    const totalPrice = calculatePrice(menu.price, options);
+    
     onAddToCart({
       menuId: menu.id,
       menuName: menu.name,
       basePrice: menu.price,
-      options: {
-        addShot,
-        addSyrup
-      },
+      options,
       quantity: 1,
-      totalPrice: menu.price + (addShot ? 500 : 0)
+      totalPrice
     });
     
     // 옵션 초기화
@@ -23,7 +31,7 @@ function MenuCard({ menu, onAddToCart }) {
     setAddSyrup(false);
   };
 
-  const displayPrice = menu.price + (addShot ? 500 : 0);
+  const displayPrice = calculatePrice(menu.price, { addShot, addSyrup });
 
   return (
     <div className="menu-card">

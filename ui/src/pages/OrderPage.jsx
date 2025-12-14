@@ -67,6 +67,14 @@ const mockMenus = [
 function OrderPage({ onNavigate }) {
   const [cartItems, setCartItems] = useState([]);
 
+  // 옵션별 가격 계산 헬퍼 함수
+  const calculateUnitPrice = (basePrice, options) => {
+    let price = basePrice;
+    if (options.addShot) price += 500;
+    if (options.addSyrup) price += 0; // 현재 시럽 추가는 무료
+    return price;
+  };
+
   const handleAddToCart = (item) => {
     // 동일한 메뉴와 옵션 조합이 있는지 확인
     const existingItemIndex = cartItems.findIndex(
@@ -79,8 +87,9 @@ function OrderPage({ onNavigate }) {
     if (existingItemIndex !== -1) {
       // 기존 아이템의 수량 증가
       const updatedItems = [...cartItems];
+      const unitPrice = calculateUnitPrice(item.basePrice, item.options);
       updatedItems[existingItemIndex].quantity += 1;
-      updatedItems[existingItemIndex].totalPrice += item.basePrice + (item.options.addShot ? 500 : 0);
+      updatedItems[existingItemIndex].totalPrice += unitPrice;
       setCartItems(updatedItems);
     } else {
       // 새 아이템 추가
@@ -91,7 +100,7 @@ function OrderPage({ onNavigate }) {
   const handleIncreaseQuantity = (index) => {
     const updatedItems = [...cartItems];
     const item = updatedItems[index];
-    const unitPrice = item.basePrice + (item.options.addShot ? 500 : 0);
+    const unitPrice = calculateUnitPrice(item.basePrice, item.options);
     updatedItems[index].quantity += 1;
     updatedItems[index].totalPrice += unitPrice;
     setCartItems(updatedItems);
@@ -100,7 +109,7 @@ function OrderPage({ onNavigate }) {
   const handleDecreaseQuantity = (index) => {
     const updatedItems = [...cartItems];
     const item = updatedItems[index];
-    const unitPrice = item.basePrice + (item.options.addShot ? 500 : 0);
+    const unitPrice = calculateUnitPrice(item.basePrice, item.options);
     
     if (item.quantity > 1) {
       updatedItems[index].quantity -= 1;
