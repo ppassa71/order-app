@@ -1,0 +1,17 @@
+.admin-page {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.admin-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .admin-content {
+    padding: 1rem;
+  }
+}
+

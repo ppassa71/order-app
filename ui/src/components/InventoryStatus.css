@@ -1,0 +1,103 @@
+.inventory-section {
+  margin-bottom: 2rem;
+}
+
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.inventory-card {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.inventory-info {
+  flex: 1;
+}
+
+.inventory-menu-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #1f2937;
+}
+
+.inventory-details {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.inventory-stock {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.inventory-status {
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.status-normal {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status-warning {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-out {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.inventory-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.inventory-button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #2563eb;
+  background-color: white;
+  color: #2563eb;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.inventory-button:hover {
+  background-color: #2563eb;
+  color: white;
+}
+
+.inventory-button:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+  .inventory-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
